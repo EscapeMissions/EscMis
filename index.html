@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape Missions</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #111; /* fallback color */
+      background-image: radial-gradient(#222 1px, transparent 1px),
+                        radial-gradient(#222 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: 0 0, 20px 20px;
+    }
+
+    .logo-container {
+      text-align: center;
+      flex: 1; /* take up space so footer stays at bottom */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-container img {
+      width: 500px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Tab bar styles */
+    .tabbar {
+      display: flex;
+      justify-content: space-around;
+      background-color: #222;
+      border-top: 2px solid #444;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .tabbar a {
+      color: #eee;
+      text-decoration: none;
+      font-size: 16px;
+      flex: 1;
+      text-align: center;
+      transition: color 0.3s;
+    }
+
+    .tabbar a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <a href="ebook.html">
+      <img src="EM_logo2.png" alt="Escape Missions Logo">
+    </a>
+  </div>
+
+  <!-- Bottom tab bar -->
+  <div class="tabbar">
+    <a href="aboutus.html">About Us</a>
+    <a href="threeinone.html">Three In One</a>
+    <a href="believe.html">What We Believe</a>
+    <a href="ebook.html">eBooks</a>
+    <a href="freeworksheets.html">Free Worksheets</a>
+  </div>
+</body>
+</html>
