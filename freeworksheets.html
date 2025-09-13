@@ -2,75 +2,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Free Worksheets</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #FDF5E6;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
-      color: #333;
-    }
-    header {
-      background: #222;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-    }
-    nav {
-      margin: 10px;
-      text-align: center;
-    }
-    nav a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #0077cc;
-    }
+  /* Base */
+  body {
+    font-family: Arial, sans-serif;
+    background: #FDF5E6;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  header {
+    background: #222;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+  }
+
+  nav {
+    margin: 10px;
+    text-align: center;
+  }
+
+  nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #0077cc;
+  }
+
+  main {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  h1, h2 {
+    color: #222;
+  }
+
+  .file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+  }
+  .file:first-of-type { border-top: 0; }
+
+  .file-title { font-weight: bold; }
+
+  .actions a {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #0077cc;
+  }
+
+  .actions a.primary {
+    background: #0077cc;
+    color: #fff;
+    border-color: #0077cc;
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    background: #FDF5E6;
+    margin-top: 40px;
+  }
+
+  /* --- Responsive: tablets and small laptops --- */
+  @media (max-width: 768px) {
     main {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 16px;
+      padding: 16px;
     }
-    h1, h2 {
-      color: #222;
+
+    nav a {
+      display: inline-block;
+      margin: 6px 8px; /* wrap nicely on two lines if needed */
     }
+
     .file {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 0;
-      border-top: 1px solid #eee;
+      flex-direction: column;     /* stack title/actions vertically */
+      align-items: flex-start;
     }
-    .file:first-of-type { border-top: 0; }
+
+    .actions {
+      margin-top: 8px;
+    }
+
+    .actions a {
+      margin-left: 0;
+      margin-right: 8px;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  }
+
+  /* --- Responsive: phones --- */
+  @media (max-width: 480px) {
+    header {
+      padding: 12px;
+      font-size: 18px;           /* slightly smaller header text */
+    }
+
+    nav {
+      margin: 8px;
+    }
+
+    nav a {
+      display: block;            /* stack links vertically */
+      margin: 8px 0;
+    }
+
+    main {
+      margin: 12px;
+      padding: 14px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .file {
+      padding: 8px 0;
+      gap: 8px;
+    }
+
     .file-title {
-      font-weight: bold;
+      font-size: 14px;
     }
+
     .actions a {
       display: inline-block;
-      margin-left: 8px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      text-decoration: none;
-      border: 1px solid #ddd;
-      color: #0077cc;
+      font-size: 13px;
+      padding: 6px 10px;
     }
+
+    /* Optional: make action buttons full-width on very tight screens */
     .actions a.primary {
-      background: #0077cc;
-      color: #fff;
-      border-color: #0077cc;
-    }
-    footer {
+      width: 100%;
       text-align: center;
-      padding: 15px;
-      background: #FDF5E6;
-      margin-top: 40px;
+      box-sizing: border-box;
+      margin-right: 0;
     }
-  </style>
+  }
+</style>
+
 </head>
 <body>
   <header>
