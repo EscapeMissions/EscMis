@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Escape Missions</title>
   <style>
     body {
@@ -27,7 +30,8 @@
     }
 
     .logo-container img {
-      width: 500px;
+      width: 70%;      /* always half of the parent width */
+  max-width: 500px;	/*upper bound*/
       height: auto;
       cursor: pointer;
       transition: transform 0.3s ease;
@@ -37,31 +41,48 @@
       transform: scale(1.05);
     }
 
-    /* Tab bar styles */
-    .tabbar {
-      display: flex;
-      justify-content: space-around;
-      background-color: #222;
-      border-top: 2px solid #444;
-      padding: 10px 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
+   /* Keep page content above the fixed bar */
+body { padding-bottom: 12vh; }
 
-    .tabbar a {
-      color: #eee;
-      text-decoration: none;
-      font-size: 16px;
-      flex: 1;
-      text-align: center;
-      transition: color 0.3s;
-    }
+/* Tab bar: fluid width and spacing */
+.tabbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #222;
+  border-top: 2px solid #444;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1000;
 
-    .tabbar a:hover {
-      color: #fff;
-    }
+  /* fluid padding + safe area for iPhone notches */
+  padding: clamp(10px, 2.5vh, 18px) clamp(8px, 3vw, 20px);
+  padding-bottom: max(clamp(10px, 2.5vh, 18px), env(safe-area-inset-bottom, 0px));
+}
+
+/* Tab links: fluid text size + finger-friendly targets */
+.tabbar a {
+  color: #eee;
+  text-decoration: none;
+  flex: 1;
+  text-align: center;
+
+  /* scales between 14px and 20px based on viewport width */
+  font-size: clamp(14px, 2.5vw, 20px);
+
+  /* accessible tap target */
+  padding: 10px 0;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.tabbar a:hover,
+.tabbar a:focus { color: #fff; opacity: 0.95; }
+
   </style>
 </head>
 <body>
