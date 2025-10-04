@@ -5,26 +5,84 @@
   <title>eBooks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background: #FDF5E6; margin: 0; padding: 0; line-height: 1.6; color: #333; }
-    header { background: #222; color: #fff; padding: 15px; text-align: center; }
-    nav { margin: 10px; text-align: center; }
-    nav a { margin: 0 10px; text-decoration: none; color: #0077cc; }
-    main { max-width: 900px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-    h1, h2 { color: #222; margin-top: 0; }
-    .announcement { font-size: 1.2rem; font-weight: bold; margin: 20px 0 10px; }
-    .store-picker { display: inline-flex; align-items: center; gap: 8px; background: #f7efe0; border: 1px solid #e0d6c2; padding: 8px 12px; border-radius: 8px; margin: 10px auto 20px; }
-    .store-picker label { font-weight: 600; }
-    .cover-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; justify-items: center; align-items: start; margin-top: 10px; }
-    .cover-card { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .cover-card img { border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
-    .hint { font-size: 0.85rem; color: #555; margin-top: 6px; }
-    footer { text-align: center; padding: 15px; background: #FDF5E6; margin-top: 40px; }
+    :root{
+      --page-bg:#FDF5E6;
+      --ink:#333;
+      --panel:#fff;
+      --accent:#0077cc;
+      --shadow:0 2px 5px rgba(0,0,0,0.1);
+      --card-w:160px;       /* base min width */
+      --card-gap:16px;
+      --arrow-bg:rgba(0,0,0,.6);
+    }
+    *{box-sizing:border-box}
+    body{font-family:Arial, sans-serif; background:var(--page-bg); margin:0; color:var(--ink); line-height:1.6}
+    header{background:#222; color:#fff; padding:15px; text-align:center}
+    nav{margin:10px; text-align:center}
+    nav a{margin:0 10px; text-decoration:none; color:var(--accent)}
+    main{max-width:1000px; margin:24px auto; padding:20px; background:var(--panel); border-radius:8px; box-shadow:var(--shadow)}
+    h1,h2{color:#222; margin:0 0 8px}
+    .announcement{font-size:1.05rem; font-weight:700; margin:12px 0 6px}
+    .store-picker{display:inline-flex; align-items:center; gap:8px; background:#f7efe0; border:1px solid #e0d6c2; padding:8px 12px; border-radius:8px; margin:10px 0 6px}
+    .store-picker label{font-weight:600}
+    .hint{font-size:.9rem; color:#555; margin-bottom:10px}
+    footer{text-align:center; padding:15px; background:var(--page-bg); margin-top:24px}
+
+    /* --- Slider layout --- */
+    .slider{
+      position:relative;
+      width:100%;
+      overflow:hidden;
+      padding:8px 36px; /* room for arrows on mobile */
+    }
+    .slider[aria-busy="true"]{opacity:.75}
+    .cover-viewport{
+      overflow:hidden;
+      width:100%;
+    }
+    .cover-track{
+      display:flex;
+      gap:var(--card-gap);
+      will-change:transform;
+      transition:transform .28s ease-in-out;
+      padding-block:6px;
+    }
+    .cover-card{
+      flex:0 0 var(--card-w); /* fixed basis so we can slide by exact widths */
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .cover-card img{width:137px; height:200px; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,.15)}
+    .arrow{
+      position:absolute; top:50%; transform:translateY(-50%);
+      border:0; width:32px; height:32px; border-radius:50%;
+      display:grid; place-items:center; cursor:pointer;
+      background:var(--arrow-bg); color:#fff; font-size:18px; line-height:1;
+      transition:opacity .2s;
+    }
+    .arrow[disabled]{opacity:.35; cursor:default}
+    .arrow.left{left:6px}
+    .arrow.right{right:6px}
+
+    /* Larger screens show larger images; still use fixed basis to simplify JS */
+    @media (min-width:480px){
+      .cover-card img{width:150px; height:219px}
+      :root{--card-w:173px}
+    }
+    @media (min-width:768px){
+      main{padding:24px}
+      .slider{padding-inline:44px}
+      .arrow{width:36px; height:36px; font-size:20px}
+      .cover-card img{width:160px; height:234px}
+      :root{--card-w:185px}
+    }
+    @media (min-width:1000px){
+      .cover-card img{width:170px; height:248px}
+      :root{--card-w:195px}
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>eBooks</h1>
-  </header>
+  <header><h1>eBooks</h1></header>
 
   <nav>
     <a href="index.html">Home</a> |
@@ -36,7 +94,7 @@
 
   <main>
     <h2>The adventure begins!</h2>
-    <p class="announcement">Missions 1–5 are available on Kobo, Google Play and Apple Books right now.</p>
+    <p class="announcement">Missions 1–6 are available on Kobo, Google Play and Apple Books right now.</p>
 
     <!-- Store selector -->
     <div class="store-picker" role="group" aria-label="Choose your store">
@@ -51,147 +109,222 @@
       Tip: Click any cover and you’ll be taken to the chosen store. If no store is chosen, Kobo is used.
     </div>
 
-    <section class="cover-grid">
-
-      <div class="cover-card">
-        <a
-          class="store-link"
-          href="https://www.kobo.com/nz/en/ebook/escape-mission-1-the-glowworm-cave"
-          data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-1-the-glowworm-cave"
-          data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_1_The_Glowwo?id=ZbOFEQAAQBAJ&hl=en"
-          data-apple="https://books.apple.com/nz/book/escape-mission-1-the-glowworm-cave/id6752793248"
-        >
-          <img src="CoverPageMis1.jpg" alt="Cover Page Mission 1" width="137" height="200">
-        </a>
+    <!-- Responsive slider with arrows -->
+    <section class="slider" aria-label="Book covers carousel">
+      <button class="arrow left" aria-label="Previous" title="Previous">&#10094;</button>
+      <div class="cover-viewport">
+        <div class="cover-track">
+          <!-- CARD 1 -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-1-the-glowworm-cave"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-1-the-glowworm-cave"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_1_The_Glowwo?id=ZbOFEQAAQBAJ&hl=en"
+              data-apple="https://books.apple.com/nz/book/escape-mission-1-the-glowworm-cave/id6752793248">
+              <img src="CoverPageMis1.jpg" alt="Cover Page Mission 1">
+            </a>
+          </div>
+          <!-- CARD 2 -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-2-the-river"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-2-the-river"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_2_The_River?id=pciFEQAAQBAJ&hl=en"
+              data-apple="https://books.apple.com/nz/book/escape-mission-2-the-river/id6752793030">
+              <img src="CoverPageMis2.jpg" alt="Cover Page Mission 2">
+            </a>
+          </div>
+          <!-- CARD 3 -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-3-the-beach"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-3-the-beach"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_3_The_Beach?id=BMqFEQAAQBAJ&hl=en"
+              data-apple="https://books.apple.com/nz/book/escape-mission-3-the-beach/id6752793360">
+              <img src="CoverPageMis3.jpg" alt="Cover Page Mission 3">
+            </a>
+          </div>
+          <!-- CARD 4 -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-4-the-redwood-forest"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-4-the-redwood-forest"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_4_The_Redwoo?id=hiyIEQAAQBAJ&hl=en"
+              data-apple="https://books.apple.com/nz/book/escape-mission-4-the-redwood-forest/id6752973091">
+              <img src="CoverPageMis4.jpg" alt="Cover Page Mission 4">
+            </a>
+          </div>
+          <!-- CARD 5 -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-5-the-meadow"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-5-the-meadow"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_5_The_Meadow?id=3JWJEQAAQBAJ&hl=en"
+              data-apple="https://books.apple.com/nz/book/escape-mission-5-the-meadow/id6752995372">
+              <img src="CoverPageMis5.jpg" alt="Cover Page Mission 5">
+            </a>
+          </div>
+          <!-- CARD 6 (placeholder currently points to 5th links per original file) -->
+          <div class="cover-card">
+            <a class="store-link"
+              href="https://www.kobo.com/nz/en/ebook/escape-mission-6-the-glacier"
+              data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-6-the-glacier"
+              data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_6_The_Glacie?id=R_-KEQAAQBAJ"
+              data-apple="https://books.apple.com/nz/book/escape-mission-6-the-glacier/id6753270102">
+              <img src="CoverPageMis6.jpg" alt="Cover Page Mission 6">
+            </a>
+          </div>
+        </div>
       </div>
-
-      <div class="cover-card">
-        <a
-          class="store-link"
-          href="https://www.kobo.com/nz/en/ebook/escape-mission-2-the-river"
-          data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-2-the-river"
-          data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_2_The_River?id=pciFEQAAQBAJ&hl=en"
-          data-apple="https://books.apple.com/nz/book/escape-mission-2-the-river/id6752793030"
-        >
-          <img src="CoverPageMis2.jpg" alt="Cover Page Mission 2" width="137" height="200">
-        </a>
-      </div>
-
-      <div class="cover-card">
-        <a
-          class="store-link"
-          href="https://www.kobo.com/nz/en/ebook/escape-mission-3-the-beach"
-          data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-3-the-beach"
-          data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_3_The_Beach?id=BMqFEQAAQBAJ&hl=en"
-          data-apple="https://books.apple.com/nz/book/escape-mission-3-the-beach/id6752793360"
-        >
-          <img src="CoverPageMis3.jpg" alt="Cover Page Mission 3" width="137" height="200">
-        </a>
-      </div>
-
-      <div class="cover-card">
-        <a
-          class="store-link"
-          href="https://www.kobo.com/nz/en/ebook/escape-mission-4-the-redwood-forest"
-          data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-4-the-redwood-forest"
-          data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_4_The_Redwoo?id=hiyIEQAAQBAJ&hl=en"
-          data-apple="https://books.apple.com/nz/book/escape-mission-4-the-redwood-forest/id6752973091"
-        >
-          <img src="CoverPageMis4.jpg" alt="Cover Page Mission 4" width="137" height="200">
-        </a>
-      </div>
-
-<div class="cover-card">
-        <a
-          class="store-link"
-          href="https://www.kobo.com/nz/en/ebook/escape-mission-5-the-meadow"
-          data-kobo="https://www.kobo.com/nz/en/ebook/escape-mission-5-the-meadow"
-          data-google="https://play.google.com/store/books/details/Katelin_A_Knightingale_Escape_Mission_5_The_Meadow?id=3JWJEQAAQBAJ&hl=en"
-          data-apple="https://books.apple.com/nz/book/escape-mission-5-the-meadow/id6752995372"
-        >
-          <img src="CoverPageMis5.jpg" alt="Cover Page Mission 5" width="137" height="200">
-        </a>
-      </div>
-
+      <button class="arrow right" aria-label="Next" title="Next">&#10095;</button>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Escape Missions. All Rights Reserved.</p>
-  </footer>
+  <footer><p>&copy; 2025 Escape Missions. All Rights Reserved.</p></footer>
 
   <script>
-    (function () {
-      const select = document.getElementById('storeSelect');
-      const links = Array.from(document.querySelectorAll('a.store-link'));
-      const STORAGE_KEY = 'storeChoice';
+  /* ----- Store selector: keep your original logic, with minor tweaks ----- */
+  (function () {
+    const select = document.getElementById('storeSelect');
+    const links = Array.from(document.querySelectorAll('a.store-link'));
+    const STORAGE_KEY = 'storeChoice';
 
-      // Helpers
-      const getChoice = () => (select?.value || 'kobo');
-      const urlFor = (link, store) => {
-        if (store === 'google' && link.dataset.google) return link.dataset.google;
-        if (store === 'apple'  && link.dataset.apple)  return link.dataset.apple;
-        return link.dataset.kobo || link.getAttribute('href');
-      };
-      const applyChoiceToAllLinks = () => {
-        const store = getChoice();
-        links.forEach(link => {
-          const url = urlFor(link, store);
-          // Pre-set href so hover/copy/open-in-new-tab is correct
-          if (url) link.setAttribute('href', url);
-        });
-      };
-
-      // 1) Restore previous choice from localStorage (if any)
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved && select) {
-          select.value = saved;
-        }
-      } catch (_) { /* ignore storage errors */ }
-
-      // 2) Ensure links match the (restored) choice on initial load
-      applyChoiceToAllLinks();
-
-      // 3) Persist on change + update hrefs
-      if (select) {
-        select.addEventListener('change', () => {
-          try { localStorage.setItem(STORAGE_KEY, select.value); } catch (_) {}
-          applyChoiceToAllLinks();
-        });
-      }
-
-      // 4) Robust click handling (left click)
+    const getChoice = () => (select?.value || 'kobo');
+    const urlFor = (link, store) => {
+      if (store === 'google' && link.dataset.google) return link.dataset.google;
+      if (store === 'apple'  && link.dataset.apple)  return link.dataset.apple;
+      return link.dataset.kobo || link.getAttribute('href');
+    };
+    const applyChoiceToAllLinks = () => {
+      const store = getChoice();
       links.forEach(link => {
-        link.addEventListener('click', (e) => {
-          const store = getChoice();
-          const url = urlFor(link, store);
-          if (!url) return; // fall through to default if somehow missing
-          // Be explicit to avoid any race with default href
-          e.preventDefault();
-          window.location.href = url;
-        });
-        // 5) Middle-click (open in new tab)
-        link.addEventListener('auxclick', (e) => {
-          if (e.button !== 1) return; // only react to middle button
-          const store = getChoice();
-          const url = urlFor(link, store);
-          if (!url) return;
-          // Let the browser open a new tab with the correct URL
-          link.setAttribute('href', url);
-        });
+        const url = urlFor(link, store);
+        if (url) link.setAttribute('href', url);
       });
+    };
 
-      // Optional: handle bfcache restore: re-apply links when page is shown from cache
-      window.addEventListener('pageshow', () => {
-        // Refresh from localStorage (in case it changed elsewhere)
-        try {
-          const saved = localStorage.getItem(STORAGE_KEY);
-          if (saved && select) select.value = saved;
-        } catch (_) {}
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && select) select.value = saved;
+    } catch (_) {}
+
+    applyChoiceToAllLinks();
+
+    if (select) {
+      select.addEventListener('change', () => {
+        try { localStorage.setItem(STORAGE_KEY, select.value); } catch (_) {}
         applyChoiceToAllLinks();
       });
-    })();
+    }
+
+    // Open correct URL on click (left)
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const url = urlFor(link, getChoice());
+        if(!url) return;
+        e.preventDefault();
+        window.location.href = url;
+      });
+      // Middle click (open in new tab)
+      link.addEventListener('auxclick', (e) => {
+        if (e.button !== 1) return;
+        const url = urlFor(link, getChoice());
+        if (url) link.setAttribute('href', url);
+      });
+    });
+
+    // Re-apply when page is shown from cache
+    window.addEventListener('pageshow', applyChoiceToAllLinks);
+  })();
+
+  /* ----- Carousel logic: responsive and touch-friendly ----- */
+  (function(){
+    const slider = document.querySelector('.slider');
+    const viewport = document.querySelector('.cover-viewport');
+    const track = document.querySelector('.cover-track');
+    const cards = Array.from(document.querySelectorAll('.cover-card'));
+    const prev = document.querySelector('.arrow.left');
+    const next = document.querySelector('.arrow.right');
+
+    if(!slider || !viewport || !track || cards.length === 0) return;
+
+    let index = 0;           // how many cards from the start are hidden to the left
+    let cardW = 0;           // computed width incl. gap
+    let maxIndex = 0;        // max scroll steps
+
+    function computeMetrics(){
+      const first = cards[0];
+      const cardRect = first.getBoundingClientRect();
+      // Effective step equals card basis plus gap. We infer gap from CSS var or DOM gap.
+      const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '16');
+      cardW = cardRect.width + gap;
+
+      const viewportWidth = viewport.clientWidth;
+      const visibleCount = Math.max(1, Math.floor((viewportWidth + gap) / cardW)); // conservative
+      maxIndex = Math.max(0, cards.length - visibleCount);
+      index = Math.min(index, maxIndex);
+    }
+
+    function update(){
+      track.style.transform = `translateX(${-index * cardW}px)`;
+      prev.disabled = (index <= 0);
+      next.disabled = (index >= maxIndex);
+    }
+
+    function go(dir){
+      index = Math.max(0, Math.min(maxIndex, index + dir));
+      update();
+    }
+
+    // Buttons
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+
+    // Keyboard accessibility
+    slider.setAttribute('tabindex','0');
+    slider.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowLeft') go(-1);
+      if(e.key === 'ArrowRight') go(1);
+    });
+
+    // Touch / drag
+    let startX = 0, lastX = 0, dragging = false;
+    function onStart(clientX){
+      dragging = true; startX = lastX = clientX;
+      slider.setAttribute('aria-busy','true');
+    }
+    function onMove(clientX){
+      if(!dragging) return;
+      const dx = clientX - lastX;
+      lastX = clientX;
+      const current = -index * cardW - (startX - clientX);
+      track.style.transform = `translateX(${current}px)`;
+    }
+    function onEnd(clientX){
+      if(!dragging) return;
+      dragging = false;
+      slider.removeAttribute('aria-busy');
+      const delta = clientX - startX;
+      if(Math.abs(delta) > cardW * 0.25){
+        go(delta < 0 ? 1 : -1);
+      }else{
+        update();
+      }
+    }
+    // Mouse
+    viewport.addEventListener('mousedown', e => onStart(e.clientX));
+    window.addEventListener('mousemove', e => onMove(e.clientX));
+    window.addEventListener('mouseup',   e => onEnd(e.clientX));
+    // Touch
+    viewport.addEventListener('touchstart', e => onStart(e.touches[0].clientX), {passive:true});
+    viewport.addEventListener('touchmove',  e => onMove(e.touches[0].clientX), {passive:true});
+    viewport.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
+
+    // Recalculate on resize or fonts load
+    const ro = new ResizeObserver(()=>{ computeMetrics(); update(); });
+    ro.observe(viewport);
+    computeMetrics(); update();
+  })();
   </script>
 </body>
 </html>
