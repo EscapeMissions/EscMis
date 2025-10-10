@@ -343,6 +343,7 @@
   top: 15px;
   right: 15px;
   width: 280px;
+  max-height: 87vh;     /* ✅ limits height to 70% of the screen height */
   background: #fffbe8;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -350,6 +351,8 @@
   padding: 10px 14px;
   font-size: 14px;
   z-index: 1000;
+  overflow-y: auto;
+  
 }
 #tipBox img {
   width: 100%;
